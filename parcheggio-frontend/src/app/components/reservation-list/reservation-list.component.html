@@ -1,0 +1,139 @@
+<div class="reservations-container">
+    <h2>Gestione Prenotazioni</h2>
+    
+    <div class="search-form">
+        <h3>Trova le tue prenotazioni</h3>
+        <p>Inserisci l'email utilizzata per la prenotazione per visualizzare le tue prenotazioni.</p>
+        
+        <div class="search-input-container">
+            <mat-form-field appearance="fill" class="email-field">
+                <mat-label>Email</mat-label>
+                <input matInput [(ngModel)]="userEmail" type="email" placeholder="Inserisci la tua email">
+            </mat-form-field>
+            
+            <button mat-raised-button color="primary" (click)="searchReservations()" [disabled]="isLoading">
+                <span *ngIf="!isLoading">Cerca</span>
+                <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+            </button>
+        </div>
+    </div>
+    
+    <div *ngIf="isLoading" class="loading-container">
+        <mat-spinner diameter="40"></mat-spinner>
+        <p>Caricamento delle prenotazioni...</p>
+    </div>
+    
+    <div *ngIf="!isLoading && searchPerformed">
+        <div *ngIf="reservations.length === 0" class="no-results">
+            <p>Nessuna prenotazione trovata per questa email.</p>
+        </div>
+        
+        <table *ngIf="reservations.length > 0" mat-table [dataSource]="reservations" class="mat-elevation-z8">
+            <ng-container matColumnDef="spotNumber">
+                <th mat-header-cell *matHeaderCellDef>Posto</th>
+                <td mat-cell *matCellDef="let reservation">{{ reservation.parkingSpot.spotNumber }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="startTime">
+                <th mat-header-cell *matHeaderCellDef>Inizio</th>
+                <td mat-cell *matCellDef="let reservation">{{ reservation.startTime | date:'dd/MM/yyyy HH:mm' }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="endTime">
+                <th mat-header-cell *matHeaderCellDef>Fine</th>
+                <td mat-cell *matCellDef="let reservation">{{ reservation.endTime | date:'dd/MM/yyyy HH:mm' }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="cost">
+                <th mat-header-cell *matHeaderCellDef>Costo</th>
+                <td mat-cell *matCellDef="let reservation">{{ reservation.cost }} €</td>
+            </ng-container>
+              <ng-container matColumnDef="ticketId">
+                <th mat-header-cell *matHeaderCellDef>Ticket ID</th>
+                <td mat-cell *matCellDef="let reservation">{{ reservation.ticketId || 'N/A' }}</td>
+            </ng-container>
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Azioni</th>
+                <td mat-cell *matCellDef="let reservation">
+                    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Opzioni prenotazione">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item (click)="editReservation(reservation)">
+                            <mat-icon color="primary">edit</mat-icon>
+                            <span>Modifica prenotazione</span>
+                        </button>
+                        <button mat-menu-item (click)="deleteReservation(reservation)">
+                            <mat-icon color="warn">delete</mat-icon>
+                            <span>Cancella prenotazione</span>
+                        </button>
+                    </mat-menu>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>    </div>
+      <!-- Form di modifica -->
+    <div *ngIf="isEditMode && selectedReservation" class="edit-form-container">
+        <div class="edit-form-overlay" (click)="cancelEdit()"></div>
+        <div class="edit-form">
+            <h3>Modifica Prenotazione</h3>
+            <form #editForm="ngForm">
+                <mat-form-field appearance="outline">
+                    <mat-label>Targa</mat-label>
+                    <input matInput [(ngModel)]="selectedReservation.vehiclePlate" name="vehiclePlate" required pattern="[A-Z]{2}[0-9]{3}[A-Z]{2}" placeholder="Es. AA123BB">
+                    <mat-error *ngIf="editForm.controls['vehiclePlate']?.errors?.['required']">La targa è obbligatoria</mat-error>
+                    <mat-error *ngIf="editForm.controls['vehiclePlate']?.errors?.['pattern']">Formato non valido (es. AA123BB)</mat-error>
+                </mat-form-field>
+                
+                <mat-form-field appearance="outline">
+                    <mat-label>Email</mat-label>
+                    <input matInput [(ngModel)]="selectedReservation.email" name="email" required type="email">
+                    <mat-error *ngIf="editForm.controls['email']?.errors?.['required']">L'email è obbligatoria</mat-error>
+                    <mat-error *ngIf="editForm.controls['email']?.errors?.['email']">Formato email non valido</mat-error>
+                </mat-form-field>                <div class="date-time-section">
+                    <h4>Data e Ora Prenotazione</h4>
+                    <p class="info-text">La modifica potrebbe comportare un ricalcolo dei costi</p>
+                    
+                    <div class="date-time-row">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Data Inizio</mat-label>
+                            <input matInput [matDatepicker]="startDatePicker" [(ngModel)]="startDate" name="startDate" required>
+                            <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+                            <mat-datepicker #startDatePicker></mat-datepicker>
+                        </mat-form-field>
+                        
+                        <mat-form-field appearance="outline">
+                            <mat-label>Ora Inizio</mat-label>
+                            <input matInput type="time" [(ngModel)]="startTime" name="startTime" required>
+                        </mat-form-field>
+                    </div>
+                    
+                <div class="date-time-row last-row">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Data Fine</mat-label>
+                            <input matInput [matDatepicker]="endDatePicker" [(ngModel)]="endDate" name="endDate" required>
+                            <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+                            <mat-datepicker #endDatePicker></mat-datepicker>
+                        </mat-form-field>
+                        
+                        <mat-form-field appearance="outline">
+                            <mat-label>Ora Fine</mat-label>
+                            <input matInput type="time" [(ngModel)]="endTime" name="endTime" required>
+                        </mat-form-field>
+                    </div>
+                </div>                <div class="form-actions">
+                    <button mat-stroked-button color="basic" type="button" (click)="cancelEdit()">
+                        <mat-icon>close</mat-icon> Annulla
+                    </button>
+                    <button mat-raised-button color="primary" type="button" (click)="updateReservation()" [disabled]="editForm.invalid || isLoading">
+                        <mat-icon *ngIf="!isLoading">save</mat-icon>
+                        <span *ngIf="!isLoading">Aggiorna</span>
+                        <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

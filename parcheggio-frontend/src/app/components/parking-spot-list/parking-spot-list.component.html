@@ -1,0 +1,7 @@
+<h2>Lista Posti Parcheggio</h2>
+<ul>
+    <li *ngFor="let spot of spots">
+        Posto: {{ spot.spotNumber }} - Occupato: {{ spot.isOccupied ? 'Sì' : 'No' }}
+        <span *ngIf="spot.vehiclePlate"> - Targa: {{ spot.vehiclePlate }}</span>
+    </li>
+</ul>

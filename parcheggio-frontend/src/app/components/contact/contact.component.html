@@ -1,0 +1,63 @@
+<section class="contacts-section">
+    <div class="container">
+        <h2 class="section-title">Contattaci</h2>
+        <div class="contacts-content">
+            <!-- Informazioni di contatto -->
+            <div class="contact-info">
+                <div class="contact-item">
+                    <mat-icon class="contact-icon">email</mat-icon>
+                    <p>Email: <a href="mailto:info@parcheggiofacile.it">info-parcheggiofacile.it</a></p>
+                </div>
+                <div class="contact-item">
+                    <mat-icon class="contact-icon">phone</mat-icon>
+                    <p>Telefono: <a href="tel:+390123456789">+39 012 345 6789</a></p>
+                </div>
+                <div class="contact-item">
+                    <mat-icon class="contact-icon">location_on</mat-icon>
+                    <p>Indirizzo: Via dei Parcheggi 123, Milano, Italia</p>
+                </div>
+                <!-- Separatore -->
+                <hr class="separator">
+                <!-- Link ai social media -->
+                <div class="contact-item social-links">
+                    <mat-icon class="contact-icon">share</mat-icon>
+                    <p>
+                        Seguici su: 
+                        <a href="https://facebook.com" target="_blank" aria-label="Seguici su Facebook">Facebook</a> | 
+                        <a href="https://instagram.com" target="_blank" aria-label="Seguici su Instagram">Instagram</a>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Form di contatto -->
+            <div class="contact-form">
+                <h3>Invia un Messaggio</h3>
+                <form #contactForm="ngForm" (ngSubmit)="onContactSubmit()">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Nome</mat-label>
+                        <input matInput [(ngModel)]="contactData.name" name="name" required>
+                        <mat-error *ngIf="contactForm.controls['name']?.errors?.['required']">Il nome è obbligatorio</mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="fill">
+                        <mat-label>Email</mat-label>
+                        <input matInput [(ngModel)]="contactData.email" name="email" type="email" required email>
+                        <mat-error *ngIf="contactForm.controls['email']?.errors?.['required']">L'email è obbligatoria</mat-error>
+                        <mat-error *ngIf="contactForm.controls['email']?.errors?.['email']">Inserisci un'email valida</mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="fill">
+                        <mat-label>Messaggio</mat-label>
+                        <textarea matInput [(ngModel)]="contactData.message" name="message" rows="4" required></textarea>
+                        <mat-error *ngIf="contactForm.controls['message']?.errors?.['required']">Il messaggio è obbligatorio</mat-error>
+                    </mat-form-field>
+
+                    <button mat-raised-button color="primary" type="submit" [disabled]="!contactForm.valid || isLoading">
+                        <span *ngIf="!isLoading">Invia</span>
+                        <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>

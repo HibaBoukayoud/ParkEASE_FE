@@ -1,0 +1,14 @@
+<div class="ticket-validation-container">
+    <h2>Verifica Ticket</h2>
+    <form (ngSubmit)="onValidateTicket()">
+        <mat-form-field appearance="fill">
+            <mat-label>Ticket ID</mat-label>
+            <input matInput [(ngModel)]="ticketId" name="ticketId" required placeholder="Inserisci il ticket ID">
+            <mat-error *ngIf="!ticketId">Il ticket ID è obbligatorio</mat-error>
+        </mat-form-field>
+        <button mat-raised-button color="primary" type="submit" [disabled]="isLoading">
+            <span *ngIf="!isLoading">Verifica</span>
+            <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
+        </button>
+    </form>
+</div>

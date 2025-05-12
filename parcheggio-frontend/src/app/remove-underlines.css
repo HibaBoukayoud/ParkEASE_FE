@@ -1,0 +1,34 @@
+/* Questo file CSS rimuove tutte le sottolineature dai link della navbar */
+
+/* Rimuove la sottolineatura dai link nella navbar */
+a[mat-button] {
+    text-decoration: none !important;
+}
+
+/* Rimuove completamente lo pseudo-elemento che crea la sottolineatura */
+a[mat-button]::after {
+    content: none !important;
+    display: none !important;
+}
+
+a[mat-button]:hover::after {
+    transform: none !important;
+    display: none !important;
+}
+
+a[mat-button].active::after {
+    transform: none !important;
+    display: none !important;
+    background: transparent !important;
+}
+
+/* Rimuove anche le sottolineature dal menu mobile */
+.mobile-nav a {
+    text-decoration: none !important;
+}
+
+/* Alternativa per evidenziare i link attivi senza sottolinearli */
+a[mat-button].active {
+    opacity: 1 !important;
+    font-weight: 700 !important;
+}

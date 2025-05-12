@@ -1,0 +1,171 @@
+<div class="form-container bus-express-stylized-bg">
+    <div class="header-with-icon">
+        <img src="/assets/bus-icon.svg" alt="Bus Icon" class="bus-icon">
+        <h2>Prenota un parcheggio (BusExpress)</h2>
+    </div>
+      <!-- Fase di validazione email -->
+    <div *ngIf="emailValidationStep" class="email-validation-step">
+        <div class="email-validation-content">
+            <div class="logo-container">
+                <img src="/assets/busexpress.png" alt="BusExpress Logo" class="company-logo">
+            </div>
+            <h3><mat-icon>business</mat-icon> Area Riservata BusExpress</h3>
+            <p>Per accedere a questa sezione è necessario utilizzare un indirizzo email aziendale BusExpress.</p>
+            
+            <mat-form-field appearance="fill" class="full-width">
+                <mat-label>Email BusExpress</mat-label>
+                <input matInput [(ngModel)]="reservation.email" name="email" required type="email" placeholder="Es. nome.cognome&#64;busexpress.com">
+                <mat-icon matPrefix>email</mat-icon>
+                <mat-hint>Inserisci una mail aziendale (&#64;busexpress)</mat-hint>
+                <mat-error *ngIf="emailError">{{emailError}}</mat-error>
+            </mat-form-field>
+            
+            <button mat-raised-button color="primary" (click)="validateEmail()">
+                <mat-icon>vpn_key</mat-icon> Accedi
+            </button>
+        </div>
+    </div>
+    
+    <!-- Form di prenotazione (visibile solo dopo la validazione dell'email) -->
+    <div *ngIf="!emailValidationStep" class="layout-container">
+        <!-- Colonna sinistra: Form di prenotazione -->
+        <div class="form-column">            <form (ngSubmit)="onSubmit()" #reservationBusForm="ngForm">
+                <div class="form-field-container">
+                    <h4><mat-icon>location_on</mat-icon> Seleziona Capolinea</h4>
+                    <!-- Selettore di città -->
+                    <mat-form-field appearance="fill" class="city-selector">
+                        <mat-label>Scegli una città</mat-label>
+                        <mat-select [(ngModel)]="selectedCity" (selectionChange)="onCityChange()" name="city" required>
+                            <mat-option *ngFor="let city of cities" [value]="city.id">
+                                {{ city.name }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="reservationBusForm.controls['city']?.errors?.['required']">Seleziona una città</mat-error>
+                    </mat-form-field>
+                    
+                    <!-- Selettore di parcheggio -->
+                    <mat-form-field appearance="fill">
+                        <mat-label>Posto</mat-label>
+                        <mat-select [(ngModel)]="reservation.parkingSpotId" name="parkingSpotId" required (selectionChange)="onParkingSpotChange()">
+                            <mat-option value="" disabled>Seleziona un posto</mat-option>
+                            <mat-option *ngFor="let spot of parkingSpots" [value]="spot.id">
+                                {{ spot.spotNumber }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="reservationBusForm.controls['parkingSpotId']?.errors?.['required']">Il posto è obbligatorio</mat-error>
+                    </mat-form-field>
+                </div>
+                  <!-- Prenotazioni esistenti per il posto selezionato -->
+                <div *ngIf="spotReservations.length > 0" class="existing-reservations">
+                    <div class="reservations-header">
+                        <span class="material-icons">event_busy</span>
+                        <h3>Prenotazioni esistenti per questo posto</h3>
+                        <span class="reservations-count">{{spotReservations.length}}</span>
+                    </div>
+                    <div class="reservations-list">
+                        <div *ngFor="let res of spotReservations" class="reservation-item">
+                            <div class="reservation-time">
+                                <div class="reservation-date">
+                                    <span class="material-icons">today</span>
+                                    <span>{{ res.startTime | date:'dd/MM/yyyy' }}</span>
+                                </div>
+                                <div class="reservation-hours">
+                                    <span class="material-icons">schedule</span>
+                                    <span>{{ res.startTime | date:'HH:mm' }} - {{ res.endTime | date:'HH:mm' }}</span>
+                                </div>
+                            </div>
+                            <div *ngIf="isDifferentDay(res.startTime, res.endTime)" class="reservation-multi-day">
+                                <span class="material-icons">date_range</span>
+                                <span>fino al {{ res.endTime | date:'dd/MM/yyyy' }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-field-container">
+                    <h4><mat-icon>directions_bus</mat-icon> Dati del Bus</h4>
+                    <!-- Targa -->
+                    <mat-form-field appearance="fill" class="license-plate-field">
+                        <mat-label>Targa</mat-label>
+                        <input matInput [(ngModel)]="reservation.vehiclePlate" name="vehiclePlate" required pattern="[A-Z]{2}[0-9]{3}[A-Z]{2}" placeholder="Es. AA123BB">
+                        <mat-icon matPrefix>pin</mat-icon>
+                        <mat-error *ngIf="reservationBusForm.controls['vehiclePlate']?.errors?.['required']">La targa è obbligatoria</mat-error>
+                        <mat-error *ngIf="reservationBusForm.controls['vehiclePlate']?.errors?.['pattern']">Formato non valido (es. AA123BB)</mat-error>
+                    </mat-form-field>
+                    
+                    <!-- Email -->
+                    <mat-form-field appearance="fill">
+                        <mat-label>Email BusExpress</mat-label>
+                        <input matInput [(ngModel)]="reservation.email" name="email" required type="email" placeholder="Es. nome.cognome&#64;busexpress.com">
+                        <mat-icon matPrefix>email</mat-icon>
+                        <mat-hint>Inserisci una mail aziendale (&#64;busexpress)</mat-hint>
+                        <mat-error *ngIf="emailError">{{emailError}}</mat-error>
+                        <mat-error *ngIf="reservationBusForm.controls['email']?.errors?.['required']">L'email è obbligatoria</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="form-field-container">
+                    <h4><mat-icon>schedule</mat-icon> Data e Orari</h4>
+                    <!-- Inizio -->
+                    <mat-form-field appearance="fill">
+                        <mat-label>Data di Arrivo</mat-label>
+                        <input matInput [matDatepicker]="startPicker" [(ngModel)]="reservation.startDate" name="startDate" required>
+                        <mat-icon matPrefix>calendar_today</mat-icon>
+                        <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+                        <mat-datepicker #startPicker></mat-datepicker>
+                        <mat-error *ngIf="reservationBusForm.controls['startDate']?.errors?.['required']">Data obbligatoria</mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="fill">
+                        <mat-label>Ora di Arrivo</mat-label>
+                        <input matInput type="time" [(ngModel)]="reservation.startTime" name="startTime" required>
+                        <mat-icon matPrefix>access_time</mat-icon>
+                        <mat-error *ngIf="reservationBusForm.controls['startTime']?.errors?.['required']">Ora obbligatoria</mat-error>
+                    </mat-form-field>
+
+                    <!-- Partenza (solo orario) -->
+                    <mat-form-field appearance="fill">
+                        <mat-label>Ora di Partenza(giorno successivo)</mat-label>
+                        <input matInput type="time" [(ngModel)]="reservation.endTime" name="endTime" required>
+                        <mat-icon matPrefix>flight_takeoff</mat-icon>
+                        <mat-error *ngIf="reservationBusForm.controls['endTime']?.errors?.['required']">Ora obbligatoria</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Pulsante di submit -->
+                <button mat-raised-button color="primary" type="submit" [disabled]="!reservationBusForm.valid">
+                    <mat-icon>directions_bus</mat-icon> Prenota
+                </button>
+            </form>
+            
+            <!-- Messaggio di conferma prenotazione -->
+            <div *ngIf="reservationSuccess" class="reservation-success">
+                <div class="success-icon">
+                    <mat-icon>check_circle</mat-icon>
+                </div>
+                <h3>Posto bus riservato correttamente</h3>
+                <div class="reservation-details">
+                    <div class="detail-item">
+                        <mat-icon>directions_bus</mat-icon>
+                        <p>Targa: <strong>{{ lastVehiclePlate }}</strong></p>
+                    </div>
+                    <div class="detail-item">
+                        <mat-icon>event</mat-icon>
+                        <p>Data di arrivo: <strong>{{ formatReadableDate(lastStartDate) }}</strong></p>
+                    </div>
+                    <div class="detail-item">
+                        <mat-icon>access_time</mat-icon>
+                        <p>Ora di arrivo: <strong>{{ formatTime(lastStartTime) }}</strong></p>
+                    </div>
+                    <div class="detail-item">
+                        <mat-icon>flight_takeoff</mat-icon>
+                        <p>Partenza: <strong>il giorno successivo, ore {{ formatTime(lastEndTime) }}</strong></p>
+                    </div>
+                </div>
+                <button mat-raised-button color="primary" (click)="emailValidationStep = true; reservationSuccess = false;" class="new-reservation-btn">
+                    <mat-icon>add_circle</mat-icon> Nuova Prenotazione
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,121 @@
+<div class="form-container">
+    <h2>Prenota un Posto</h2>
+    <div class="layout-container">
+        <!-- Colonna sinistra: Form di prenotazione -->
+        <div class="form-column">
+            <form (ngSubmit)="onSubmit()" #reservationForm="ngForm">
+                <!-- Selettore di città -->
+                <mat-form-field appearance="fill" class="city-selector">
+                    <mat-label>Scegli una città</mat-label>
+                    <mat-select [(ngModel)]="selectedCity" (selectionChange)="onCityChange()" name="city" required>
+                        <mat-option *ngFor="let city of cities" [value]="city.id">
+                            {{ city.name }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="reservationForm.controls['city']?.errors?.['required']">Seleziona una città</mat-error>
+                </mat-form-field>                <!-- Selettore di parcheggio -->
+                <mat-form-field appearance="fill">
+                    <mat-label>Posto</mat-label>
+                    <mat-select [(ngModel)]="reservation.parkingSpotId" name="parkingSpotId" required (selectionChange)="onParkingSpotChange()">
+                        <mat-option value="" disabled>Seleziona un posto</mat-option>
+                        <mat-option *ngFor="let spot of parkingSpots" [value]="spot.id">
+                            {{ spot.spotNumber }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="reservationForm.controls['parkingSpotId']?.errors?.['required']">Il posto è obbligatorio</mat-error>
+                </mat-form-field>                <!-- Prenotazioni esistenti per il posto selezionato -->                <div *ngIf="spotReservations.length > 0" class="existing-reservations">
+                    <div class="reservations-header">
+                        <span class="material-icons">event_busy</span>
+                        <h3>Prenotazioni esistenti per questo posto</h3>
+                        <span class="reservations-count">{{spotReservations.length}}</span>
+                    </div>
+                    <div class="reservations-list">
+                        <div *ngFor="let res of spotReservations" class="reservation-item">                            <div class="reservation-time">
+                                <div class="reservation-date">
+                                    <span class="material-icons">today</span>
+                                    <span>{{ res.startTime | date:'dd/MM/yyyy' }}</span>
+                                </div>
+                                <div class="reservation-hours">
+                                    <span class="material-icons">schedule</span>
+                                    <span>{{ res.startTime | date:'HH:mm' }} - {{ res.endTime | date:'HH:mm' }}</span>
+                                </div>
+                            </div>
+                            <div *ngIf="isDifferentDay(res.startTime, res.endTime)" class="reservation-multi-day">
+                                <span class="material-icons">date_range</span>
+                                <span>fino al {{ res.endTime | date:'dd/MM/yyyy' }}</span>
+                            </div>
+                        </div>
+                    </div>                </div>                <!-- Targa -->
+                <mat-form-field appearance="fill" class="license-plate-field">
+                    <mat-label>Targa</mat-label>
+                    <input matInput [(ngModel)]="reservation.vehiclePlate" name="vehiclePlate" required pattern="[A-Z]{2}[0-9]{3}[A-Z]{2}" placeholder="Es. AA123BB">
+                    <mat-error *ngIf="reservationForm.controls['vehiclePlate']?.errors?.['required']">La targa è obbligatoria</mat-error>
+                    <mat-error *ngIf="reservationForm.controls['vehiclePlate']?.errors?.['pattern']">Formato non valido (es. AA123BB)</mat-error>
+                </mat-form-field>                <!-- Email -->
+                <mat-form-field appearance="fill">
+                    <mat-label>Email</mat-label>
+                    <input matInput [(ngModel)]="reservation.email" name="email" required type="email" placeholder="Es. tuonome@esempio.com">
+                    <mat-error *ngIf="reservationForm.controls['email']?.errors?.['required']">L'email è obbligatoria</mat-error>
+                    <mat-error *ngIf="reservationForm.controls['email']?.errors?.['email']">Formato email non valido</mat-error>
+                </mat-form-field>
+
+                <!-- Conferma Email -->
+                <mat-form-field appearance="fill">
+                    <mat-label>Conferma Email</mat-label>
+                    <input matInput [(ngModel)]="emailConfirm" name="emailConfirm" required type="email" placeholder="Conferma la tua email">
+                    <mat-error *ngIf="reservationForm.controls['emailConfirm']?.errors?.['required']">La conferma email è obbligatoria</mat-error>
+                    <mat-error *ngIf="!emailsMatch && reservationForm.controls['emailConfirm']?.valid">Le email non corrispondono</mat-error>
+                </mat-form-field>
+
+                <!-- Inizio -->
+                <mat-form-field appearance="fill">
+                    <mat-label>Data Inizio</mat-label>
+                    <input matInput [matDatepicker]="startPicker" [(ngModel)]="reservation.startDate" name="startDate" required>
+                    <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #startPicker></mat-datepicker>
+                    <mat-error *ngIf="reservationForm.controls['startDate']?.errors?.['required']">Data obbligatoria</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill">
+                    <mat-label>Ora Inizio</mat-label>
+                    <input matInput type="time" [(ngModel)]="reservation.startTime" name="startTime" required>
+                    <mat-error *ngIf="reservationForm.controls['startTime']?.errors?.['required']">Ora obbligatoria</mat-error>
+                </mat-form-field>
+
+                <!-- Fine -->
+                <mat-form-field appearance="fill">
+                    <mat-label>Data Fine</mat-label>
+                    <input matInput [matDatepicker]="endPicker" [(ngModel)]="reservation.endDate" name="endDate" required>
+                    <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #endPicker></mat-datepicker>
+                    <mat-error *ngIf="reservationForm.controls['endDate']?.errors?.['required']">Data obbligatoria</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill">
+                    <mat-label>Ora Fine</mat-label>
+                    <input matInput type="time" [(ngModel)]="reservation.endTime" name="endTime" required>
+                    <mat-error *ngIf="reservationForm.controls['endTime']?.errors?.['required']">Ora obbligatoria</mat-error>
+                </mat-form-field>
+
+                <!-- Pulsante di submit -->
+                <button mat-raised-button color="primary" type="submit" [disabled]="!reservationForm.valid">Prenota</button>
+            </form>
+
+            <!-- Costo e Ticket ID dell'ultima prenotazione -->
+            <div *ngIf="lastReservationCost !== null || lastTicketId !== null" class="reservation-info">
+                <div *ngIf="lastReservationCost !== null" class="cost-display">
+                    Costo dell'ultima prenotazione: {{ lastReservationCost }} €
+                </div>
+                <div *ngIf="lastTicketId !== null" class="ticket-display">
+                    <p><strong>Ticket ID:</strong> {{ lastTicketId }}</p>
+                    <p class="info-text">Conserva questo ID per uscire dal parcheggio. Puoi ritrovarlo nella sezione "Lista Prenotazioni".</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Colonna destra: Verifica del ticket -->
+        <div class="validation-column">
+            <app-ticket-validation></app-ticket-validation>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,20 @@
+/* You can add global styles to this file, and also import other style files */
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #f5f5f5;
+  margin: 0;
+  padding: 20px;
+}
+
+/* Fuori da body, a livello globale */
+.mat-toolbar a.mat-button,
+.mat-toolbar a.mat-button:-webkit-any-link,
+.mat-toolbar a.mat-button:link,
+.mat-toolbar a.mat-button:visited,
+.mat-toolbar a.mat-button:hover,
+.mat-toolbar a.mat-button:focus {
+  text-decoration: none !important;
+}
+
+
+

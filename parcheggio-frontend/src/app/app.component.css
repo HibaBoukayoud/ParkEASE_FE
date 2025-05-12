@@ -1,0 +1,253 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
+
+.navbar {
+    background: linear-gradient(90deg, #2152f3, #4CAF50);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    transition: all 0.3s ease;
+    height: 64px;
+}
+
+.navbar.scrolled {
+    background: linear-gradient(90deg, #2152f3, #4CAF50);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    height: 56px;
+}
+
+/* Logo CSS */
+.logo-container {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    margin-left: 10px;
+    transition: transform 0.3s ease;
+}
+
+.logo-container:hover {
+    transform: scale(1.05);
+}
+
+.logo-design {
+    display: flex;
+    align-items: center;
+}
+
+.logo-icon {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(45deg, #2196F3, #4CAF50);
+    border-radius: 8px;
+    color: white;
+    font-weight: 700;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 10px rgba(33, 150, 243, 0.3);
+    position: relative;
+    overflow: hidden;
+    
+}
+
+.logo-icon::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, rgba(255, 255, 255, 0.2), transparent);
+    top: 0;
+    left: 0;
+}
+
+.logo-text {
+    margin-left: 8px;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+     /* spessore e colore del contorno */
+}
+
+.logo-text:hover {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5), 0 0 15px rgba(255, 255, 255, 0.3);
+}
+
+.logo-park {
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.logo-ease {
+    color: #4CAF50;
+    text-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+    transition: all 0.3s ease;
+}
+
+.logo-container:hover .logo-park {
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+}
+
+.logo-container:hover .logo-ease {
+    color: #8BC34A;
+    text-shadow: 0 0 12px rgba(139, 195, 74, 0.7);
+}
+
+.navbar.scrolled .logo-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 20px;
+}
+
+.navbar.scrolled .logo-text {
+    font-size: 18px;
+}
+
+.spacer {
+    flex: 1 1 auto;
+}
+
+
+.mat-toolbar .mat-button-wrapper {
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+
+a[mat-button] {
+    color: white;
+    font-weight: 500;
+    margin: 0 5px;
+    padding: 0 16px;
+    height: 64px;
+    line-height: 64px;
+    position: relative;
+    overflow: hidden;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    font-family: 'Montserrat', sans-serif !important;
+    opacity: 0.9;
+    text-decoration: none; 
+}
+
+
+
+.navbar a[mat-button] {
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 500;
+}
+
+.navbar.scrolled a[mat-button] {
+    height: 56px;
+    line-height: 56px;
+}
+
+a[mat-button]:hover {
+    background-color: transparent;
+    opacity: 1;
+}
+
+/* Rimuovi completamente la sottolineatura */
+a[mat-button]::after {
+    content: none; /* Disattiva completamente lo pseudo-elemento */
+}
+
+a[mat-button]:hover::after {
+    transform: none;
+}
+
+a[mat-button].active {
+    opacity: 1;
+    font-weight: 700; /* Rende il testo più evidente invece di sottolinearlo */
+}
+
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 84px 20px 20px; /* Aggiunto padding-top per compensare la navbar fixed */
+}
+
+.app-container {
+    padding: 20px;
+}
+
+/* Menu mobile */
+.mobile-menu-button {
+    display: none;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.mobile-nav {
+    display: none;
+    position: fixed;
+    top: 64px;
+    left: 0;
+    right: 0;
+    background: linear-gradient(90deg, #2152f3, #4CAF50);
+    padding: 20px;
+    z-index: 999;
+    transform: translateY(-100%);
+    transition: transform 0.3s ease;
+}
+
+.mobile-nav.open {
+    transform: translateY(0);
+}
+
+.mobile-nav a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    padding: 15px 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;   /* 400 = normale, 600 = semi-bold */
+    font-size: 18px;    /* regola a tuo gusto */
+}
+
+.mobile-nav a i {
+  margin-right: 10px;
+  /* opzionale: dimensione icona */
+  font-size: 18px;
+  vertical-align: middle;
+}
+
+
+
+.mobile-nav a:last-child {
+    border-bottom: none;
+}
+
+.mobile-nav a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding-left: 15px;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5), 0 0 15px rgba(255, 255, 255, 0.3);
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        padding: 0 10px;
+    }
+    
+    a[mat-button] {
+        display: none;
+    }
+    
+    .mobile-menu-button {
+        display: block;
+    }
+    
+    .mobile-nav {
+        display: block;
+    }
+}
+
+

@@ -1,0 +1,282 @@
+/* Separatore */
+.separator {
+    border: none;
+    border-top: 2px solid rgba(33, 150, 243, 0.2);
+    margin: 25px 0;
+}
+
+.contacts-section {
+    padding: 80px 0;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    position: relative;
+    overflow: hidden;
+    animation: fadeIn 1s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.contacts-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #2196F3, #4CAF50);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    position: relative;
+    z-index: 1;
+}
+
+.section-title {
+    text-align: center;
+    font-size: 2.5em;
+    color: #2c3e50;
+    margin-bottom: 50px;
+    position: relative;
+    animation: slideDown 0.8s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, #2196F3, #4CAF50);
+    border-radius: 2px;
+}
+
+.contacts-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    animation: slideUp 0.8s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.contact-info {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.contact-info:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 25px;
+    transition: transform 0.3s ease;
+}
+
+.contact-item:hover {
+    transform: translateX(10px);
+}
+
+.contact-icon {
+    font-size: 24px;
+    color: #2196F3;
+    margin-right: 15px;
+    transition: transform 0.3s ease;
+}
+
+.contact-item:hover .contact-icon {
+    transform: scale(1.2) rotate(5deg);
+}
+
+.contact-item p {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #2c3e50;
+}
+
+.contact-item a {
+    color: #2196F3;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.contact-item a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, #2196F3, #4CAF50);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.contact-item a:hover::after {
+    transform: scaleX(1);
+}
+
+.social-links {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.social-links p {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.social-links a {
+    color: #2196F3;
+    text-decoration: none;
+    margin: 0 10px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.social-links a:hover {
+    color: #1976D2;
+    transform: translateY(-2px);
+}
+
+.contact-form {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.contact-form h3 {
+    font-size: 1.8rem;
+    color: #2c3e50;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+mat-form-field {
+    width: 100%;
+    transition: transform 0.3s ease;
+}
+
+mat-form-field:hover {
+    transform: translateX(5px);
+}
+
+::ng-deep .mat-form-field-appearance-fill .mat-form-field-flex {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+::ng-deep .mat-form-field-appearance-fill .mat-form-field-flex:hover {
+    background-color: rgba(255, 255, 255, 1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+button[mat-raised-button] {
+    width: 100%;
+    padding: 12px;
+    font-size: 1.1em;
+    border-radius: 8px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(45deg, #2196F3, #1976D2);
+    border: none;
+    color: white;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+button[mat-raised-button]:not([disabled]):hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(33, 150, 243, 0.3);
+    background: linear-gradient(45deg, #1E88E5, #1565C0);
+}
+
+button[mat-raised-button]:not([disabled]):active {
+    transform: translateY(0);
+}
+
+button[mat-raised-button][disabled] {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+mat-spinner {
+    margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+    .contacts-section {
+        padding: 60px 0;
+    }
+
+    .contacts-content {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    .section-title {
+        font-size: 2em;
+        margin-bottom: 40px;
+    }
+
+    .contact-info,
+    .contact-form {
+        padding: 30px;
+    }
+
+    .contact-item {
+        margin-bottom: 20px;
+    }
+
+    .contact-item p {
+        font-size: 1rem;
+    }
+}
