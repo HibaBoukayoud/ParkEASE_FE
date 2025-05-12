@@ -105,14 +105,14 @@
                 </div>
 
                 <div class="form-field-container">
-                    <h4><mat-icon>schedule</mat-icon> Data e Orari</h4>
-                    <!-- Inizio -->
+                    <h4><mat-icon>schedule</mat-icon> Data e Orari</h4>                    <!-- Inizio -->
                     <mat-form-field appearance="fill">
                         <mat-label>Data di Arrivo</mat-label>
-                        <input matInput [matDatepicker]="startPicker" [(ngModel)]="reservation.startDate" name="startDate" required>
+                        <input matInput [matDatepicker]="startPicker" [(ngModel)]="reservation.startDate" name="startDate" required [min]="today">
                         <mat-icon matPrefix>calendar_today</mat-icon>
                         <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
                         <mat-datepicker #startPicker></mat-datepicker>
+                        <mat-hint>Seleziona una data futura</mat-hint>
                         <mat-error *ngIf="reservationBusForm.controls['startDate']?.errors?.['required']">Data obbligatoria</mat-error>
                     </mat-form-field>
 
@@ -123,9 +123,20 @@
                         <mat-error *ngIf="reservationBusForm.controls['startTime']?.errors?.['required']">Ora obbligatoria</mat-error>
                     </mat-form-field>
 
+                    <!-- Fine -->
+                    <mat-form-field appearance="fill">
+                        <mat-label>Data di Partenza</mat-label>
+                        <input matInput [matDatepicker]="endPicker" [(ngModel)]="reservation.endDate" name="endDate" required [min]="reservation.startDate">
+                        <mat-icon matPrefix>calendar_today</mat-icon>
+                        <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+                        <mat-datepicker #endPicker></mat-datepicker>
+                        <mat-hint>Deve essere successiva alla data di arrivo</mat-hint>
+                        <mat-error *ngIf="reservationBusForm.controls['endDate']?.errors?.['required']">Data obbligatoria</mat-error>
+                    </mat-form-field>
+
                     <!-- Partenza (solo orario) -->
                     <mat-form-field appearance="fill">
-                        <mat-label>Ora di Partenza(giorno successivo)</mat-label>
+                        <mat-label>Ora di Partenza</mat-label>
                         <input matInput type="time" [(ngModel)]="reservation.endTime" name="endTime" required>
                         <mat-icon matPrefix>flight_takeoff</mat-icon>
                         <mat-error *ngIf="reservationBusForm.controls['endTime']?.errors?.['required']">Ora obbligatoria</mat-error>
@@ -148,8 +159,7 @@
                     <div class="detail-item">
                         <mat-icon>directions_bus</mat-icon>
                         <p>Targa: <strong>{{ lastVehiclePlate }}</strong></p>
-                    </div>
-                    <div class="detail-item">
+                    </div>                    <div class="detail-item">
                         <mat-icon>event</mat-icon>
                         <p>Data di arrivo: <strong>{{ formatReadableDate(lastStartDate) }}</strong></p>
                     </div>
@@ -159,7 +169,7 @@
                     </div>
                     <div class="detail-item">
                         <mat-icon>flight_takeoff</mat-icon>
-                        <p>Partenza: <strong>il giorno successivo, ore {{ formatTime(lastEndTime) }}</strong></p>
+                        <p>Data e ora di partenza: <strong>{{ formatReadableDate(lastEndDate) }}, ore {{ formatTime(lastEndTime) }}</strong></p>
                     </div>
                 </div>
                 <button mat-raised-button color="primary" (click)="emailValidationStep = true; reservationSuccess = false;" class="new-reservation-btn">

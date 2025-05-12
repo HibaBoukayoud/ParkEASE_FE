@@ -52,12 +52,12 @@ interface Reservation {
     templateUrl: './reservation-form.component.html',
     styleUrls: ['./reservation-form.component.css']
 })
-export class ReservationFormComponent {    
-    cities: City[] = [];
+export class ReservationFormComponent {      cities: City[] = [];
     parkingSpots: ParkingSpot[] = [];
     selectedCity: number | null = null;    
     emailConfirm: string = '';
     emailsMatch: boolean = true;
+    today = new Date(); // Data di oggi per limitare il selettore di date
     
     reservation: Reservation = {
         parkingSpotId: 0,
@@ -85,33 +85,29 @@ export class ReservationFormComponent {
         const month = (`0${d.getMonth() + 1}`).slice(-2); // Aggiunge uno zero davanti se necessario
         const day = (`0${d.getDate()}`).slice(-2);
         return `${year}-${month}-${day}`;
-    }
-
-    loadCities() {
+    }    loadCities() {
         this.http.get<City[]>('http://localhost:8080/api/cities').subscribe({
-            next: (data) => {
+            next: (data: City[]) => {
                 this.cities = data;
             },
-            error: (error) => {
+            error: (error: any) => {
                 this.snackBar.open('Errore nel caricamento delle città', 'Chiudi', { duration: 3000 });
             }
         });
-    }
-
-    onCityChange() {
+    }    onCityChange() {
         if (this.selectedCity) {
             this.http.get<ParkingSpot[]>(`http://localhost:8080/api/parking-spots/city/${this.selectedCity}`).subscribe({
-                next: (data) => {
+                next: (data: ParkingSpot[]) => {
                     this.parkingSpots = data;
                 },
-                error: (error) => {
+                error: (error: any) => {
                     this.snackBar.open('Errore nel caricamento dei posti auto', 'Chiudi', { duration: 3000 });
                 }
             });
         } else {
             this.parkingSpots = [];
         }
-    }    onSubmit() {
+    }onSubmit() {
         if (!this.selectedCity || !this.reservation.parkingSpotId || !this.reservation.vehiclePlate ||
             !this.reservation.startDate || !this.reservation.startTime ||
             !this.reservation.endDate || !this.reservation.endTime) {
@@ -129,11 +125,16 @@ export class ReservationFormComponent {
 
         // Formatta le date dal datepicker
         const startDateStr = this.formatDate(this.reservation.startDate);
-        const endDateStr = this.formatDate(this.reservation.endDate);
-
-        // Crea gli oggetti Date
+        const endDateStr = this.formatDate(this.reservation.endDate);        // Crea gli oggetti Date
         const startDateTime = new Date(`${startDateStr}T${this.reservation.startTime}`);
         const endDateTime = new Date(`${endDateStr}T${this.reservation.endTime}`);
+
+        // Verifica se la data di inizio è nel passato
+        const now = new Date();
+        if (startDateTime < now) {
+            this.snackBar.open('Non è possibile prenotare per date/orari nel passato', 'Chiudi', { duration: 3000 });
+            return;
+        }
 
         // Validazione delle date
         if (isNaN(startDateTime.getTime()) || isNaN(endDateTime.getTime())) {
@@ -160,9 +161,7 @@ export class ReservationFormComponent {
             email: this.reservation.email,
             startTime: formatLocalDateTime(startDateTime),
             endTime: formatLocalDateTime(endDateTime)
-        };
-
-        this.http.post('http://localhost:8080/api/reservations', reservationData).subscribe({
+        };        this.http.post('http://localhost:8080/api/reservations', reservationData).subscribe({
             next: (response: any) => {
                 this.snackBar.open('Prenotazione creata con successo!', 'Chiudi', { duration: 3000 });
                 this.lastReservationCost = response.cost;
@@ -176,7 +175,7 @@ export class ReservationFormComponent {
                 }
                 if (response.parkingSpot?.id !== undefined) {
                     this.updateParkingSpotStatus(response.parkingSpot.id, true, this.reservation.vehiclePlate);
-                }                this.reservation = {
+                }this.reservation = {
                     parkingSpotId: 0,
                     vehiclePlate: '',
                     email: '',
@@ -189,7 +188,7 @@ export class ReservationFormComponent {
                 this.selectedCity = null;
                 this.parkingSpots = [];
                 this.reservationCreated.emit();
-            },            error: (error) => {
+            },            error: (error: any) => {
                 // Verifica se c'è un messaggio di errore specifico
                 if (error.error && error.error.error) {
                     this.snackBar.open(error.error.error, 'Chiudi', { duration: 5000 });
@@ -203,7 +202,7 @@ export class ReservationFormComponent {
             next: () => {
                 this.onCityChange();
             },
-            error: (error) => {
+            error: (error: any) => {
                 this.snackBar.open('Errore nell\'aggiornamento dello stato del posto', 'Chiudi', { duration: 3000 });
             }
         });
@@ -214,17 +213,15 @@ export class ReservationFormComponent {
         const startDate = new Date(startTime).toDateString();
         const endDate = new Date(endTime).toDateString();
         return startDate !== endDate;
-    }
-
-    onParkingSpotChange() {
+    }    onParkingSpotChange() {
         if (this.reservation.parkingSpotId) {
             this.http.get<{ startTime: string, endTime: string }[]>(
                 `http://localhost:8080/api/reservations/by-parking-spot/${this.reservation.parkingSpotId}`
             ).subscribe({
-                next: (data) => {
+                next: (data: { startTime: string, endTime: string }[]) => {
                     this.spotReservations = data;
                 },
-                error: (error) => {
+                error: (error: any) => {
                     this.snackBar.open('Errore nel caricamento delle prenotazioni esistenti', 'Chiudi', { duration: 3000 });
                     this.spotReservations = [];
                 }

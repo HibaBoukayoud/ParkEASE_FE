@@ -49,10 +49,10 @@ export class ReservationBusFormComponent {      cities: City[] = [];
     selectedCity: number | null = null;    
     isEmailValid: boolean = false;
     formVisible: boolean = false;
-    reservationSuccess: boolean = false;
-    lastVehiclePlate: string = '';
+    reservationSuccess: boolean = false;    lastVehiclePlate: string = '';
     lastStartDate: string | Date = '';
     lastStartTime: string = '';
+    lastEndDate: string | Date = '';
     lastEndTime: string = '';
     emailError: string = '';
     emailValidationStep: boolean = true;
@@ -66,6 +66,8 @@ export class ReservationBusFormComponent {      cities: City[] = [];
         endDate: '',
         endTime: ''
     };
+    
+    today = new Date(); // Data di oggi per limitare il selettore di date
     
     spotReservations: { startTime: string, endTime: string }[] = [];
     @Output() reservationCreated = new EventEmitter<void>();
@@ -96,31 +98,29 @@ export class ReservationBusFormComponent {      cities: City[] = [];
     formatTime(time: string): string {
         if (!time) return '';
         return time;
-    }
-
-    // Calcola la data del giorno successivo
-    getNextDayDate(date: Date | string): Date {
-        const d = new Date(date);
-        d.setDate(d.getDate() + 1);
-        return d;
-    }
-
-    loadCities() {
+    }    // Funzione per verificare se una data è nel passato
+    isPastDate(date: Date | string): boolean {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Reset dell'ora per confrontare solo la data
+        const checkDate = new Date(date);
+        checkDate.setHours(0, 0, 0, 0);
+        return checkDate < today;
+    }    loadCities() {
         this.http.get<City[]>('http://localhost:8080/api/cities').subscribe({
-            next: (data) => {
+            next: (data: City[]) => {
                 this.cities = data;
             },
-            error: (error) => {
+            error: (error: any) => {
                 this.snackBar.open('Errore nel caricamento delle città', 'Chiudi', { duration: 3000 });
             }
         });
-    }    onCityChange() {
+    }onCityChange() {
         if (this.selectedCity) {
             this.http.get<ParkingSpot[]>(`http://localhost:8080/api/parking-spots/city/${this.selectedCity}/bus`).subscribe({
-                next: (data) => {
+                next: (data: ParkingSpot[]) => {
                     this.parkingSpots = data;
                 },
-                error: (error) => {
+                error: (error: any) => {
                     this.snackBar.open('Errore nel caricamento dei posti bus', 'Chiudi', { duration: 3000 });
                 }
             });
@@ -142,20 +142,20 @@ export class ReservationBusFormComponent {      cities: City[] = [];
             return;
         }
         this.emailError = '';
-        
-        // Formatta le date dal datepicker
+          // Formatta le date dal datepicker
         const startDateStr = this.formatDate(this.reservation.startDate);
+        const endDateStr = this.formatDate(this.reservation.endDate);
         
-        // Calcola automaticamente la data di fine (giorno successivo)
-        const nextDay = this.getNextDayDate(this.reservation.startDate);
-        const endDateStr = this.formatDate(nextDay);
-        
-        // La data di fine è impostata al giorno successivo con l'ora specificata dall'utente
-        this.reservation.endDate = nextDay;
-
         // Crea gli oggetti Date
         const startDateTime = new Date(`${startDateStr}T${this.reservation.startTime}`);
         const endDateTime = new Date(`${endDateStr}T${this.reservation.endTime}`);
+
+        // Verifica se la data di inizio è nel passato
+        const now = new Date();
+        if (startDateTime < now) {
+            this.snackBar.open('Non è possibile prenotare per date/orari nel passato', 'Chiudi', { duration: 3000 });
+            return;
+        }
 
         // Validazione delle date
         if (isNaN(startDateTime.getTime()) || isNaN(endDateTime.getTime())) {
@@ -191,11 +191,11 @@ export class ReservationBusFormComponent {      cities: City[] = [];
 
         this.http.post('http://localhost:8080/api/reservations', reservationData).subscribe({
             next: (response: any) => {
-                this.snackBar.open('Posto bus riservato correttamente!', 'Chiudi', { duration: 3000 });
-                this.reservationSuccess = true;
+                this.snackBar.open('Posto bus riservato correttamente!', 'Chiudi', { duration: 3000 });                this.reservationSuccess = true;
                 this.lastVehiclePlate = this.reservation.vehiclePlate;
                 this.lastStartDate = this.reservation.startDate;
                 this.lastStartTime = this.reservation.startTime;
+                this.lastEndDate = this.reservation.endDate;
                 this.lastEndTime = this.reservation.endTime;
                 
                 if (response.parkingSpot?.id !== undefined) {
@@ -213,8 +213,7 @@ export class ReservationBusFormComponent {      cities: City[] = [];
                 this.selectedCity = null;
                 this.parkingSpots = [];
                 this.reservationCreated.emit();
-            },
-            error: (error) => {
+            },            error: (error: any) => {
                 // Verifica se c'è un messaggio di errore specifico
                 if (error.error && error.error.error) {
                     this.snackBar.open(error.error.error, 'Chiudi', { duration: 5000 });
@@ -224,8 +223,7 @@ export class ReservationBusFormComponent {      cities: City[] = [];
             }
         });
     }
-    
-    updateParkingSpotStatus(spotId: number, isOccupied: boolean, vehiclePlate: string) {
+      updateParkingSpotStatus(spotId: number, isOccupied: boolean, vehiclePlate: string) {
         this.http.put(`http://localhost:8080/api/parking-spots/${spotId}`, { 
             isOccupied: isOccupied, 
             vehiclePlate: vehiclePlate 
@@ -233,7 +231,7 @@ export class ReservationBusFormComponent {      cities: City[] = [];
             next: () => {
                 this.onCityChange();
             },
-            error: (error) => {
+            error: (error: any) => {
                 this.snackBar.open('Errore nell\'aggiornamento dello stato del posto', 'Chiudi', { duration: 3000 });
             }
         });
@@ -249,10 +247,10 @@ export class ReservationBusFormComponent {      cities: City[] = [];
             this.http.get<{ startTime: string, endTime: string }[]>(
                 `http://localhost:8080/api/reservations/by-parking-spot/${this.reservation.parkingSpotId}`
             ).subscribe({
-                next: (data) => {
+                next: (data: { startTime: string, endTime: string }[]) => {
                     this.spotReservations = data;
                 },
-                error: (error) => {
+                error: (error: any) => {
                     this.snackBar.open('Errore nel caricamento delle prenotazioni esistenti', 'Chiudi', { duration: 3000 });
                     this.spotReservations = [];
                 }

@@ -65,14 +65,13 @@
                     <input matInput [(ngModel)]="emailConfirm" name="emailConfirm" required type="email" placeholder="Conferma la tua email">
                     <mat-error *ngIf="reservationForm.controls['emailConfirm']?.errors?.['required']">La conferma email è obbligatoria</mat-error>
                     <mat-error *ngIf="!emailsMatch && reservationForm.controls['emailConfirm']?.valid">Le email non corrispondono</mat-error>
-                </mat-form-field>
-
-                <!-- Inizio -->
+                </mat-form-field>                <!-- Inizio -->
                 <mat-form-field appearance="fill">
                     <mat-label>Data Inizio</mat-label>
-                    <input matInput [matDatepicker]="startPicker" [(ngModel)]="reservation.startDate" name="startDate" required>
+                    <input matInput [matDatepicker]="startPicker" [(ngModel)]="reservation.startDate" name="startDate" [min]="today" required>
                     <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
                     <mat-datepicker #startPicker></mat-datepicker>
+                    <mat-hint>Seleziona una data futura</mat-hint>
                     <mat-error *ngIf="reservationForm.controls['startDate']?.errors?.['required']">Data obbligatoria</mat-error>
                 </mat-form-field>
 
@@ -85,9 +84,10 @@
                 <!-- Fine -->
                 <mat-form-field appearance="fill">
                     <mat-label>Data Fine</mat-label>
-                    <input matInput [matDatepicker]="endPicker" [(ngModel)]="reservation.endDate" name="endDate" required>
+                    <input matInput [matDatepicker]="endPicker" [(ngModel)]="reservation.endDate" name="endDate" [min]="reservation.startDate" required>
                     <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
                     <mat-datepicker #endPicker></mat-datepicker>
+                    <mat-hint>Deve essere successiva alla data di inizio</mat-hint>
                     <mat-error *ngIf="reservationForm.controls['endDate']?.errors?.['required']">Data obbligatoria</mat-error>
                 </mat-form-field>
 
@@ -108,7 +108,7 @@
                 </div>
                 <div *ngIf="lastTicketId !== null" class="ticket-display">
                     <p><strong>Ticket ID:</strong> {{ lastTicketId }}</p>
-                    <p class="info-text">Conserva questo ID per uscire dal parcheggio. Puoi ritrovarlo nella sezione "Lista Prenotazioni".</p>
+                    <p class="info-text">Conserva questo ID per uscire dal parcheggio. Puoi ritrovarlo nella sezione "Gestione Prenotazioni".</p>
                 </div>
             </div>
         </div>
