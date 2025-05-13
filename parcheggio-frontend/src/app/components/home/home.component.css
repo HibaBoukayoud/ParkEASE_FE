@@ -1,14 +1,55 @@
 .hero-section {
     position: relative;
+    /*height: 90vh;
+    min-height: 600px;*/
+    width: 100%;
     height: 90vh;
-    min-height: 600px;
-    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/assets/park.jpg') no-repeat center center/cover;
+    aspect-ratio: 16 / 9;
+    /*background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/assets/park1.png');
+    background-size: cover;
+    background-position: center;*/
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
     overflow: hidden;
 }
+.carousel {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  overflow: hidden;
+  z-index: 0; /* sotto l’overlay */
+}
+
+/* container flessibile per far scorrere le slide */
+.carousel .slides {
+  display: flex;
+  width: 400%;        /* 4 slide da 100% */
+  height: 100%;
+  animation: slideAnim 20s infinite;
+}
+
+/* ogni singola slide */
+.carousel .slide {
+  flex: 0 0 25%;      /* prendere 1/4 della larghezza */
+  height: 100%;
+}
+.carousel .slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;  /* riempie e ritaglia se serve */
+}
+
+/* keyframes per lo scorrimento automatico */
+@keyframes slideAnim {
+  0%, 20%    { transform: translateX(0%); }    /* slide 1 */
+  25%, 45%   { transform: translateX(-25%); }  /* slide 2 */
+  50%, 70%   { transform: translateX(-50%); }  /* slide 3 */
+  75%, 95%   { transform: translateX(-75%); }  /* slide 4 */
+  100%       { transform: translateX(0%); }    /* torna alla 1 */
+}
+
 
 .hero-section::after {
     content: '';
@@ -17,7 +58,8 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(45deg, rgba(0,0,0,0.7), rgba(0,0,0,0.3));
+    width: 100%;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.8), rgba(0,0,0,0.8));
     z-index: 1;
 }
 
@@ -57,9 +99,15 @@
 }
 
 .highlight {
-    color: #4CAF50;
-    font-weight: 700;
+  /* mantiene il testo del colore che vuoi (esempio verde) */
+  color: #39e000;
+
+  /* glow bianco molto discreto */
+  text-shadow:
+    0 0 9px rgba(255, 255, 255, 0.7),
+    0 0 10px rgba(117, 139, 116, 0.795);
 }
+
 
 .cta-container {
     display: flex;
@@ -463,4 +511,58 @@
         padding: 12px 25px;
         font-size: 1rem;
     }
+}
+
+.follow-download {
+  background: #f2f2f2;
+  padding: 40px 20px;
+}
+.follow-download .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Titoli */
+.follow-download h3 {
+  font-size: 1rem;
+  color: #000000;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+
+/* Social icons */
+.social-icons a {
+  margin-right: 12px;
+  font-size: 1.2rem;
+  color: #555;
+  transition: color .3s;
+}
+.social-icons a:hover {
+  color: #39e000; /* es. verde ParkEase */
+}
+
+/* Badge app */
+.app-badges a {
+  display: inline-block;
+  margin-right: 12px;
+}
+.app-badges img {
+  height: 40px;
+  display: block;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .follow-download .container {
+    flex-direction: column;
+    text-align: center;
+  }
+  .social-icons {
+    margin-bottom: 20px;
+  }
 }
