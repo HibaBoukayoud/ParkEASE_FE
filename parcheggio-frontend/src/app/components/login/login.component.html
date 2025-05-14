@@ -1,0 +1,13 @@
+<h2>Login</h2>
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div>
+    <label>Username</label>
+    <input formControlName="username" />
+  </div>
+  <div>
+    <label>Password</label>
+    <input type="password" formControlName="password" />
+  </div>
+  <button type="submit" [disabled]="form.invalid">Accedi</button>
+</form>
+<p>Non hai un account? <a routerLink="/register">Registrati</a></p>
