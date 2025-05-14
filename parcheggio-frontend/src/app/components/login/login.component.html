@@ -1,13 +1,18 @@
 <h2>Login</h2>
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
-  <div>
-    <label>Username</label>
-    <input formControlName="username" />
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="centered-form">
+  <div class="form-field">
+    <label for="loginEmail">Email</label>
+    <input id="loginEmail" formControlName="email" type="email" placeholder="Inserisci la tua email" />
   </div>
-  <div>
-    <label>Password</label>
-    <input type="password" formControlName="password" />
+  <div class="form-field">
+    <label for="loginPassword">Password</label>
+    <input id="loginPassword" type="password" formControlName="password" placeholder="Inserisci la tua password" />
+  </div>
+  <div class="forgot-password">
+    <a *ngIf="!isInModal()" routerLink="/reset-password">Password dimenticata?</a>
+    <a *ngIf="isInModal()" (click)="navigateToResetPassword()" class="tab-switch-link">Password dimenticata?</a>
   </div>
   <button type="submit" [disabled]="form.invalid">Accedi</button>
 </form>
-<p>Non hai un account? <a routerLink="/register">Registrati</a></p>
+<p *ngIf="!isInModal()">Non hai un account? <a routerLink="/register">Registrati</a></p>
+<p *ngIf="isInModal()">Non hai un account? <a (click)="switchToRegister()" class="tab-switch-link">Registrati</a></p>

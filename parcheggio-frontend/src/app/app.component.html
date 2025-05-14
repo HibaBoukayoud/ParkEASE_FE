@@ -1,5 +1,5 @@
 <mat-toolbar class="navbar" [class.scrolled]="isScrolled">
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Poppins:wght@400;600&family=Raleway:wght@400;600&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
   <!-- Font Awesome CDN -->
 <link
   rel="stylesheet"
@@ -14,24 +14,50 @@
             </div>
         </div>
     </a>
-    <span class="spacer"></span>    <a mat-button routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
+    <span class="spacer"></span>
+    <a mat-button routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
     <a mat-button routerLink="/prenotazioni" routerLinkActive="active">Prenota</a>
     <a mat-button routerLink="/BUS" routerLinkActive="active">BusExpress</a>
-    <a mat-button routerLink="/gestione-prenotazioni" routerLinkActive="active">Gestione Prenotazioni</a>
-    <a mat-button routerLink="/info" routerLinkActive="active">Info</a>
+    <a mat-button routerLink="/gestione-prenotazioni" routerLinkActive="active">Gestione Prenotazioni</a>    <a mat-button routerLink="/info" routerLinkActive="active">Info</a>
     <a mat-button routerLink="/contatti" routerLinkActive="active">Contatti</a>
+      <!-- Icona utente per login/logout -->
+    <ng-container *ngIf="!isLoggedIn(); else loggedInTemplate">
+        <button mat-icon-button class="user-icon-button" (click)="toggleAuthModal()">
+            <i class="fas fa-user"></i>
+        </button>
+    </ng-container>
+    <ng-template #loggedInTemplate>
+        <div>
+            <button mat-icon-button class="user-icon-button" [matMenuTriggerFor]="userMenu">
+                <i class="fas fa-user-check"></i>
+            </button>
+            <mat-menu #userMenu="matMenu">
+                <button mat-menu-item (click)="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </mat-menu>
+        </div>
+    </ng-template>
     
     <button class="mobile-menu-button" (click)="toggleMobileMenu()">
         <mat-icon>{{ isMobileMenuOpen ? 'close' : 'menu' }}</mat-icon>
     </button>
 </mat-toolbar>
 
-<div class="mobile-nav" [class.open]="isMobileMenuOpen">    <a routerLink="/" (click)="closeMobileMenu()"><i class="fa-solid fa-house"></i>Home</a>
+<div class="mobile-nav" [class.open]="isMobileMenuOpen">
+    <a routerLink="/" (click)="closeMobileMenu()"><i class="fa-solid fa-house"></i>Home</a>
     <a routerLink="/prenotazioni" (click)="closeMobileMenu()"><i class="fa-solid fa-calendar-plus"></i>Prenota</a>
     <a routerLink="/BUS" (click)="closeMobileMenu()"><i class="fa-solid fa-bus"></i>BusExpress</a>
     <a routerLink="/gestione-prenotazioni" (click)="closeMobileMenu()"><i class="fa-solid fa-list"></i>Gestione Prenotazioni</a>
     <a routerLink="/info" (click)="closeMobileMenu()"><i class="fa-solid fa-info-circle"></i>Info</a>
     <a routerLink="/contatti" (click)="closeMobileMenu()"><i class="fa-solid fa-phone"></i>Contatti</a>
+      <!-- Aggiungiamo i link per login/logout nel menu mobile -->
+    <ng-container *ngIf="!isLoggedIn()">
+        <a (click)="toggleAuthModal(); closeMobileMenu()"><i class="fa-solid fa-sign-in-alt"></i>Login / Registrati</a>
+    </ng-container>
+    <ng-container *ngIf="isLoggedIn()">
+        <a (click)="logout(); closeMobileMenu()"><i class="fa-solid fa-sign-out-alt"></i>Logout</a>
+    </ng-container>
 </div>
 
 <div class="container">

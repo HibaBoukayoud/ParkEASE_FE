@@ -1,1 +1,14 @@
-<p>register works!</p>
+<h2>Registrazione</h2>
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="centered-form">
+  <div class="form-field">
+    <label for="registerEmail">Email</label>
+    <input id="registerEmail" formControlName="email" type="email" placeholder="Inserisci la tua email" />
+  </div>
+  <div class="form-field">
+    <label for="registerPassword">Password</label>
+    <input id="registerPassword" type="password" formControlName="password" placeholder="Crea una password" />
+  </div>
+  <button type="submit" [disabled]="form.invalid">Registrati</button>
+</form>
+<p *ngIf="!isInModal()">Hai già un account? <a routerLink="/login">Accedi</a></p>
+<p *ngIf="isInModal()">Hai già un account? <a (click)="switchToLogin()" class="tab-switch-link">Accedi</a></p>

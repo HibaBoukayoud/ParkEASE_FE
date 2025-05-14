@@ -13,10 +13,42 @@
     height: 64px;
 }
 
+/* Stile per i link della navbar */
+.navbar a.mat-button {
+    font-size: 18px; /* Aumentato da 16px a 18px */
+    font-weight: 600; /* Aumentato da 500 a 600 per maggiore visibilità */
+    padding: 0 20px; /* Aumentato il padding orizzontale */
+    height: 100%;
+    line-height: 64px;
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 0.3px; /* Aggiunto un leggero spacing per migliorare la leggibilità */
+}
+
 .navbar.scrolled {
     background: linear-gradient(90deg, #2152f3, #4CAF50);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     height: 56px;
+}
+
+.navbar.scrolled a.mat-button {
+    line-height: 56px;
+    font-size: 17px; /* Leggermente più piccolo quando la navbar è in modalità scrolled */
+}
+
+/* Stili per l'icona utente */
+.user-icon-button {
+    margin-left: 16px;
+    margin-right: 8px;
+}
+
+/* Aumentata dimensione dell'icona utente */
+.user-icon-button i {
+    font-size: 1.4rem;
+    transition: color 0.3s ease;
+}
+
+.user-icon-button:hover i {
+    color: #f8f8f8;
 }
 
 /* Logo CSS */
@@ -66,9 +98,10 @@
 
 .logo-text {
     margin-left: 8px;
-    font-size: 20px;
+    font-size: 22px; /* Aumentato da 20px a 22px */
     font-weight: 700;
     letter-spacing: 0.5px;
+    font-family: 'Montserrat', sans-serif; /* Assicuriamo che anche il logo utilizzi Montserrat */
      /* spessore e colore del contorno */
 }
 
