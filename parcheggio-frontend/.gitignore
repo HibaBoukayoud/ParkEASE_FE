@@ -1,0 +1,39 @@
+# Output delle build
+/dist/
+/out-tsc/
+
+# Dependency
+/node_modules/
+
+# Angular environment files
+/src/environments/*.ts
+
+# Editor config
+/.vscode/
+/.idea/
+
+# Log e debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# File temporanei
+*.swo
+*.swp
+*.tmp
+*.temp
+
+# Output compilato
+*.js
+*.js.map
+*.tsbuildinfo
+
+# Angular internals
+.angular/
+
+# Coverage report
+/coverage/
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
