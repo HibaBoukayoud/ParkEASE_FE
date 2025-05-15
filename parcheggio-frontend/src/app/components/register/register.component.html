@@ -8,6 +8,8 @@
     <label for="registerPassword">Password</label>
     <input id="registerPassword" type="password" formControlName="password" placeholder="Crea una password" />
   </div>
+  <!-- Spazio vuoto per allineare con il form di login che ha il link di password dimenticata -->
+  <div class="password-placeholder" aria-hidden="true"></div>
   <button type="submit" [disabled]="form.invalid">Registrati</button>
 </form>
 <p *ngIf="!isInModal()">Hai già un account? <a routerLink="/login">Accedi</a></p>
@@ -17,10 +19,10 @@
   <div class="container">
     <!-- Colonna social -->
     <div class="follow-social">
-      <h3>Segui Park<span class="highlight">Ease</span> sui Social</h3>
+      <h3>SEGUI PARK<span class="highlight">EASE</span> SUI SOCIAL</h3>
       <div class="social-icons">
         <a href="https://www.facebook.com/" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-        <a href="https://www.instaram.com/" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.instagram.com/" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
         <a href="https://www.linkedin.com/" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
         <a href="https://www.twitter.com/" aria-label="X"><i class="fab fa-x"></i></a>
         <a href="https://www.telegram.com/" aria-label="Telegram"><i class="fab fa-telegram-plane"></i></a>
@@ -29,7 +31,7 @@
 
     <!-- Colonna download app -->
     <div class="download-app">
-      <h3>Scarica l’app Park<span class="highlight">Ease</span></h3>
+      <h3>SCARICA L'APP PARK<span class="highlight">EASE</span></h3>
       <div class="app-badges">
         <a href="https://www.apple.com/app-store/" aria-label="App Store">
           <img src="/assets/appstore.png" alt="Download on the App Store">

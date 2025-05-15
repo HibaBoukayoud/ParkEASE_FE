@@ -1,9 +1,8 @@
-
 .centered-form {
   max-width: 400px;
   width: 100%;  /* aggiunto per la responsività */
-  margin: 1rem auto;
-  padding: 1.5rem;  /* aumentato padding orizzontale */
+  margin: 2rem auto;  /* Allineato al login: da 1rem a 2rem */
+  padding: 2rem 1.5rem;  /* Allineato al login: da 1.5rem a 2rem 1.5rem */
   background: white;
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(33, 82, 243, 0.1);
@@ -48,6 +47,12 @@ h2 {
     margin-bottom: 1.5rem;
     margin: 0 auto 1.5rem auto;
     align-items: center;  /* centra gli elementi */
+}
+
+/* Spaziatura uguale a quella del link password dimenticata nel login */
+.password-placeholder {
+    height: 1.5rem;
+    margin-bottom: 1rem;
 }
 
 .form-field label {
@@ -145,6 +150,7 @@ p a:hover {
   background-size: 200% 100%;
   background-position: right bottom;
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   transition: all 0.3s ease-out;
 }
@@ -170,8 +176,11 @@ p a:hover {
 }
 
 .follow-download {
-  background: #f2f2f2;
-  padding: 40px 20px;
+  background: #f9f9f9;
+  padding: 20px;
+  margin-top: 20px;
+  border-radius: 0 0 8px 8px;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
 }
 .follow-download .container {
   max-width: 1200px;

@@ -19,19 +19,41 @@ body {
   font-family: 'Montserrat', sans-serif !important;
 }
 
+/* Nasconde tutte le scrollbar in modalità overlay (appaiono solo durante lo scroll) */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+/* Per WebKit browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 20px;
+}
+
 /* Stili per la finestra modale di autenticazione */
 .auth-modal .mat-mdc-dialog-container {
   padding: 0;
-  border-radius: 10px;
+  border-radius: 8px;
   overflow: visible;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
   animation: modal-appear 0.3s ease-out forwards;
+  border: none !important;
 }
 
 @keyframes modal-appear {
   from {
     opacity: 0;
-    transform: translateY(-20px);
+    transform: translateY(-10px);
   }
   to {
     opacity: 1;
@@ -47,23 +69,40 @@ body {
 }
 
 .auth-modal .mdc-dialog__surface {
-  border-radius: 10px !important;
-  overflow: visible !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  border: none !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.18);
 }
 
 /* Centra la dialog nella finestra */
 .auth-modal {
   display: flex !important;
   justify-content: center !important;
-  align-items: flex-start !important;
+  align-items: center !important;
   overflow: auto !important;
+  scrollbar-width: none; /* Nasconde la scrollbar su Firefox */
+  padding: 0 !important;
+}
+
+/* Nasconde la scrollbar su WebKit (Chrome, Safari, ecc.) */
+.auth-modal::-webkit-scrollbar {
+  display: none;
 }
 
 /* Spostare leggermente il dialog verso sinistra per compensare il decentramento */
 .auth-modal .mat-mdc-dialog-container .mdc-dialog__surface {
-  transform: translateX(-10px);
+  transform: none;
   max-height: 90vh !important; /* Limite massimo di altezza */
-  overflow-y: auto !important; /* Aggiunge scroll se necessario */
+  overflow-y: auto !important; /* Mantiene lo scorrimento se necessario */
+  scrollbar-width: none; /* Nasconde la scrollbar su Firefox */
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Nasconde la scrollbar anche sul container del dialogo sui browser WebKit */
+.auth-modal .mat-mdc-dialog-container .mdc-dialog__surface::-webkit-scrollbar {
+  display: none;
 }
 
 
