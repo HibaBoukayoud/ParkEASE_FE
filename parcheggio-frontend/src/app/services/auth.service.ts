@@ -23,7 +23,7 @@ export class AuthService {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
       },
-      // Imposta su false per diagnosticare il problema, poi potrebbe essere necessario impostarlo su true
+      // Impostato su false per prevenire problemi di CORS
       withCredentials: false
     }).pipe(
       tap(response => {
@@ -36,6 +36,20 @@ export class AuthService {
         if (token) {
           console.log('Token received and stored');
           localStorage.setItem('jwtToken', token);
+          
+          // Decodifico il payload del token JWT
+          try {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            console.log('Token payload:', payload);
+            
+            // Se il token ha una scadenza, aggiungi un log
+            if (payload.exp) {
+              const expireDate = new Date(payload.exp * 1000);
+              console.log('Token valido fino a:', expireDate);
+            }
+          } catch (e) {
+            console.error('Errore nel parsing del payload JWT:', e);
+          }
         } else {
           console.warn('No token found in response:', response);
         }
@@ -46,14 +60,47 @@ export class AuthService {
   register(email: string, password: string) {
     return this.http.post(`${this.apiUrl}/register`, { email, password });
   }
-
   getToken(): string | null {
-    return localStorage.getItem('jwtToken');
+    const token = localStorage.getItem('jwtToken');
+    
+    // Se il token esiste, verifichiamo se è scaduto
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        if (payload.exp) {
+          const isExpired = Date.now() >= payload.exp * 1000;
+          if (isExpired) {
+            console.warn('Il token è scaduto, rimuovendolo dal localStorage');
+            localStorage.removeItem('jwtToken');
+            return null;
+          }
+        }
+      } catch (e) {
+        console.error('Errore nel parsing del token JWT:', e);
+      }
+    }
+    
+    return token;
+  }
+  isLoggedIn(): boolean {
+    const isLoggedIn = !!this.getToken();
+    console.log('Auth status check: isLoggedIn =', isLoggedIn);
+    return isLoggedIn;
   }
 
-  isLoggedIn(): boolean {
-    return !!this.getToken();
+  getUserEmail(): string | null {
+    const token = this.getToken();
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        return payload.sub || payload.email; // 'sub' è standard per il soggetto JWT, ma potrebbe essere 'email' in alcuni casi
+      } catch (e) {
+        console.error('Errore nel recupero dell\'email dal token JWT:', e);
+      }
+    }
+    return null;
   }
+  
   logout() {
     localStorage.removeItem('jwtToken');
   }

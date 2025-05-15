@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface ParkingSpot {
@@ -50,26 +50,80 @@ export class ParkingSpotService {
     updateSpot(id: number, spot: Partial<ParkingSpot>): Observable<ParkingSpot> {
         return this.http.put<ParkingSpot>(`${this.parkingSpotsApiUrl}/${id}`, spot);
     }    getAllReservations(): Observable<Reservation[]> {
-        return this.http.get<Reservation[]>(this.reservationsApiUrl);
-    }
-
-    getReservationsByEmail(email: string): Observable<Reservation[]> {
-        return this.http.get<Reservation[]>(`${this.reservationsApiUrl}/by-email/${email}`);
-    }
-
-    createReservation(reservation: any): Observable<Reservation> {
-        return this.http.post<Reservation>(this.reservationsApiUrl, reservation);
-    }
-    
-    updateReservation(id: number, reservation: any): Observable<Reservation> {
-        return this.http.put<Reservation>(`${this.reservationsApiUrl}/${id}`, reservation);
+        const token = localStorage.getItem('jwtToken');
+        let headers = new HttpHeaders();
+        
+        if (token) {
+            headers = headers.set('Authorization', `Bearer ${token}`);
+        }
+        
+        return this.http.get<Reservation[]>(this.reservationsApiUrl, { headers });
+    }    getReservationsByEmail(email: string): Observable<Reservation[]> {
+        const token = localStorage.getItem('jwtToken');
+        let headers = new HttpHeaders();
+        
+        if (token) {
+            headers = headers.set('Authorization', `Bearer ${token}`);
+        }
+        
+        // Utilizziamo un parametro di query invece che incorporare l'email nell'URL
+        return this.http.get<Reservation[]>(`${this.reservationsApiUrl}`, { 
+            headers,
+            params: { email: email }
+        });
+    }createReservation(reservation: any): Observable<Reservation> {
+        // Assicuriamoci che il token JWT venga incluso nella richiesta
+        const token = localStorage.getItem('jwtToken');
+        let headers = new HttpHeaders();
+        
+        if (token) {
+            headers = headers.set('Authorization', `Bearer ${token}`);
+        }
+        
+        return this.http.post<Reservation>(this.reservationsApiUrl, reservation, {
+            headers: headers
+        });
+    }updateReservation(id: number, reservation: any): Observable<Reservation> {
+        const token = localStorage.getItem('jwtToken');
+        let headers = new HttpHeaders();
+        
+        if (token) {
+            headers = headers.set('Authorization', `Bearer ${token}`);
+        }
+        
+        return this.http.put<Reservation>(`${this.reservationsApiUrl}/${id}`, reservation, { headers });
     }
     
     deleteReservation(id: number): Observable<any> {
-        return this.http.delete<any>(`${this.reservationsApiUrl}/${id}`);
+        const token = localStorage.getItem('jwtToken');
+        let headers = new HttpHeaders();
+        
+        if (token) {
+            headers = headers.set('Authorization', `Bearer ${token}`);
+        }
+        
+        return this.http.delete<any>(`${this.reservationsApiUrl}/${id}`, { headers });
+    }    getBusReservations(): Observable<Reservation[]> {
+        const token = localStorage.getItem('jwtToken');
+        let headers = new HttpHeaders();
+        
+        if (token) {
+            headers = headers.set('Authorization', `Bearer ${token}`);
+        }
+        
+        return this.http.get<Reservation[]>(`${this.reservationsApiUrl}/bus`, { headers });
     }
-
-    getBusReservations(): Observable<Reservation[]> {
-        return this.http.get<Reservation[]>(`${this.reservationsApiUrl}/bus`);
+    
+    getReservationsByParkingSpot(parkingSpotId: number): Observable<{ startTime: string, endTime: string }[]> {
+        const token = localStorage.getItem('jwtToken');
+        let headers = new HttpHeaders();
+        
+        if (token) {
+            headers = headers.set('Authorization', `Bearer ${token}`);
+        }
+        
+        return this.http.get<{ startTime: string, endTime: string }[]>(
+            `${this.reservationsApiUrl}/by-parking-spot/${parkingSpotId}`, { headers }
+        );
     }
 }

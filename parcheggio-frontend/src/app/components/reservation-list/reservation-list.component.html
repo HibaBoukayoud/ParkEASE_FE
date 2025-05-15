@@ -2,20 +2,8 @@
     <h2>Gestione Prenotazioni</h2>
     
     <div class="search-form">
-        <h3>Trova le tue prenotazioni</h3>
-        <p>Inserisci l'email utilizzata per la prenotazione per visualizzare le tue prenotazioni.</p>
-        
-        <div class="search-input-container">
-            <mat-form-field appearance="fill" class="email-field">
-                <mat-label>Email</mat-label>
-                <input matInput [(ngModel)]="userEmail" type="email" placeholder="Inserisci la tua email">
-            </mat-form-field>
-            
-            <button mat-raised-button color="primary" (click)="searchReservations()" [disabled]="isLoading">
-                <span *ngIf="!isLoading">Cerca</span>
-                <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
-            </button>
-        </div>
+        <h3>Le tue prenotazioni</h3>
+        <p>Ecco l'elenco delle prenotazioni associate al tuo account.</p>
     </div>
     
     <div *ngIf="isLoading" class="loading-container">

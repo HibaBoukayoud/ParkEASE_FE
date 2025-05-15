@@ -2,8 +2,7 @@
     <div class="header-with-icon">
         <img src="/assets/bus-icon.svg" alt="Bus Icon" class="bus-icon">
         <h2>Prenota un Parcheggio (BusExpress)</h2>
-    </div>
-      <!-- Fase di validazione email -->
+    </div>      <!-- Fase di validazione email -->
     <div *ngIf="emailValidationStep" class="email-validation-step">
         <div class="email-validation-content">
             <div class="logo-container">
@@ -11,17 +10,16 @@
             </div>
             <h3><mat-icon>business</mat-icon> Area Riservata BusExpress</h3>
             <p>Per accedere a questa sezione è necessario utilizzare un indirizzo email aziendale BusExpress.</p>
-            
-            <mat-form-field appearance="fill" class="full-width">
+              <mat-form-field appearance="fill" class="full-width">
                 <mat-label>Email BusExpress</mat-label>
                 <input matInput [(ngModel)]="reservation.email" name="email" required type="email" placeholder="Es. nome.cognome&#64;busexpress.com">
                 <mat-icon matPrefix>email</mat-icon>
-                <mat-hint>Inserisci una mail aziendale (&#64;busexpress)</mat-hint>
+                <mat-hint>Inserisci una mail aziendale con dominio &#64;busexpress</mat-hint>
                 <mat-error *ngIf="emailError">{{emailError}}</mat-error>
             </mat-form-field>
             
             <button mat-raised-button color="primary" (click)="validateEmail()">
-                <mat-icon>vpn_key</mat-icon> Accedi
+                <mat-icon>vpn_key</mat-icon> Verifica Email
             </button>
         </div>
     </div>
@@ -81,8 +79,7 @@
                         </div>
                     </div>
                 </div>
-                
-                <div class="form-field-container">
+                  <div class="form-field-container">
                     <h4><mat-icon>directions_bus</mat-icon> Dati del Bus</h4>
                     <!-- Targa -->
                     <mat-form-field appearance="fill" class="license-plate-field">
@@ -93,14 +90,12 @@
                         <mat-error *ngIf="reservationBusForm.controls['vehiclePlate']?.errors?.['pattern']">Formato non valido (es. AA123BB)</mat-error>
                     </mat-form-field>
                     
-                    <!-- Email -->
+                    <!-- La sezione dell'email viene mostrata qui ma è di sola lettura -->
                     <mat-form-field appearance="fill">
                         <mat-label>Email BusExpress</mat-label>
-                        <input matInput [(ngModel)]="reservation.email" name="email" required type="email" placeholder="Es. nome.cognome&#64;busexpress.com">
+                        <input matInput [(ngModel)]="reservation.email" name="email" required type="email" readonly>
                         <mat-icon matPrefix>email</mat-icon>
-                        <mat-hint>Inserisci una mail aziendale (&#64;busexpress)</mat-hint>
-                        <mat-error *ngIf="emailError">{{emailError}}</mat-error>
-                        <mat-error *ngIf="reservationBusForm.controls['email']?.errors?.['required']">L'email è obbligatoria</mat-error>
+                        <mat-hint>Email aziendale BusExpress verificata</mat-hint>
                     </mat-form-field>
                 </div>
 

@@ -80,6 +80,7 @@ export class AppComponent implements OnInit {    title = 'parcheggio-frontend';
             panelClass: 'auth-modal',
             disableClose: false,
             autoFocus: false,
+            maxHeight: '90vh',
             position: { top: '60px' }
         });
 

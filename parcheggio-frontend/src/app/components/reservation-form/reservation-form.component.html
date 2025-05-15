@@ -1,5 +1,8 @@
 <div class="form-container">
     <h2>Prenota un Parcheggio</h2>
+    
+    
+    
     <div class="layout-container">
         <!-- Colonna sinistra: Form di prenotazione -->
         <div class="form-column">
@@ -54,18 +57,9 @@
                 </mat-form-field>                <!-- Email -->
                 <mat-form-field appearance="fill">
                     <mat-label>Email</mat-label>
-                    <input matInput [(ngModel)]="reservation.email" name="email" required type="email" placeholder="Es. tuonome@esempio.com">
-                    <mat-error *ngIf="reservationForm.controls['email']?.errors?.['required']">L'email è obbligatoria</mat-error>
-                    <mat-error *ngIf="reservationForm.controls['email']?.errors?.['email']">Formato email non valido</mat-error>
-                </mat-form-field>
-
-                <!-- Conferma Email -->
-                <mat-form-field appearance="fill">
-                    <mat-label>Conferma Email</mat-label>
-                    <input matInput [(ngModel)]="emailConfirm" name="emailConfirm" required type="email" placeholder="Conferma la tua email">
-                    <mat-error *ngIf="reservationForm.controls['emailConfirm']?.errors?.['required']">La conferma email è obbligatoria</mat-error>
-                    <mat-error *ngIf="!emailsMatch && reservationForm.controls['emailConfirm']?.valid">Le email non corrispondono</mat-error>
-                </mat-form-field>                <!-- Inizio -->
+                    <input matInput [(ngModel)]="reservation.email" name="email" required type="email" readonly>
+                    <mat-hint>Email dell'utente loggato (non modificabile)</mat-hint>
+                </mat-form-field><!-- Inizio -->
                 <mat-form-field appearance="fill">
                     <mat-label>Data Inizio</mat-label>
                     <input matInput [matDatepicker]="startPicker" [(ngModel)]="reservation.startDate" name="startDate" [min]="today" required>

@@ -1,5 +1,5 @@
 .auth-modal-container {
-  min-width:60px;
+  min-width: 60px;
   max-width: 650px;
   padding: 20px;
   position: relative;
@@ -9,8 +9,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow: hidden;
   box-sizing: border-box;
+  max-height: calc(90vh - 40px);
+  overflow-y: auto;
 }
 
 .close-button {
@@ -54,7 +55,7 @@
 
 /* Rimuovi scrolling da Material Dialog */
 ::ng-deep .mat-dialog-container {
-  overflow: hidden !important;
+  overflow: visible !important;
   padding: 0 !important;
 }
 
@@ -71,11 +72,11 @@
 
 ::ng-deep .mat-mdc-tab-body-content {
   padding: 20px 0;
-  overflow: hidden !important;
+  overflow: visible !important;
 }
 
 ::ng-deep .mat-tab-body-wrapper {
-  overflow: hidden !important;
+  overflow: visible !important;
 }
 
 ::ng-deep .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {

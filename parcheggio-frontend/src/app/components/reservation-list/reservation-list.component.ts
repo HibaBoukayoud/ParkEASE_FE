@@ -15,6 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { AuthService } from '../../services/auth.service';
 
 
 @Component({
@@ -57,24 +58,36 @@ export class ReservationListComponent implements OnInit {
         private parkingSpotService: ParkingSpotService, 
         private http: HttpClient, 
         private snackBar: MatSnackBar,
-        private dialog: MatDialog
-    ) { }ngOnInit() {
-        // Non carichiamo più automaticamente tutte le prenotazioni
-    }    public searchReservations(): void {
+        private dialog: MatDialog,
+        private authService: AuthService
+    ) { }
+
+    ngOnInit() {
+        // Carica automaticamente le prenotazioni dell'utente loggato
+        const userEmail = this.authService.getUserEmail();
+        if (userEmail) {
+            this.userEmail = userEmail;
+            this.loadUserReservations();
+        } else {
+            this.snackBar.open('Non è stato possibile recuperare l\'email dell\'utente loggato', 'Chiudi', { duration: 3000 });
+        }
+    }        public loadUserReservations(): void {
         if (!this.userEmail) {
-            this.snackBar.open('Inserisci un\'email valida', 'Chiudi', { duration: 3000 });
+            this.snackBar.open('Email utente non disponibile', 'Chiudi', { duration: 3000 });
             return;
         }
 
         this.isLoading = true;
         this.searchPerformed = true;
         
-        this.parkingSpotService.getReservationsByEmail(this.userEmail).subscribe({
+        // Utilizziamo getAllReservations e filtriamo lato client
+        this.parkingSpotService.getAllReservations().subscribe({
             next: (data) => {
-                this.reservations = data;
+                // Filtriamo le prenotazioni per email
+                this.reservations = data.filter(res => res.email === this.userEmail);
                 this.isLoading = false;
-                if (data.length === 0) {
-                    this.snackBar.open('Nessuna prenotazione trovata per questa email', 'Chiudi', { duration: 3000 });
+                if (this.reservations.length === 0) {
+                    this.snackBar.open('Nessuna prenotazione trovata per la tua email', 'Chiudi', { duration: 3000 });
                 }
             },
             error: (error) => {
@@ -85,7 +98,7 @@ export class ReservationListComponent implements OnInit {
             }
         });
     }
-      deleteReservation(reservation: Reservation): void {
+    deleteReservation(reservation: Reservation): void {
         if (!reservation.id) {
             this.snackBar.open('ID prenotazione non valido', 'Chiudi', { duration: 3000 });
             return;
@@ -97,7 +110,7 @@ export class ReservationListComponent implements OnInit {
             this.parkingSpotService.deleteReservation(reservation.id).subscribe({
                 next: () => {
                     this.snackBar.open('Prenotazione cancellata con successo', 'Chiudi', { duration: 3000 });
-                    this.searchReservations(); // Aggiorna la lista
+                    this.loadUserReservations(); // Aggiorna la lista
                 },
                 error: (error) => {
                     console.error('Errore nella cancellazione della prenotazione:', error);
@@ -181,7 +194,7 @@ export class ReservationListComponent implements OnInit {
                 this.isLoading = false;
                 this.isEditMode = false;
                 this.selectedReservation = null;
-                this.searchReservations(); // Aggiorna la lista
+                this.loadUserReservations(); // Aggiorna la lista
             },
             error: (error) => {
                 console.error('Errore durante l\'aggiornamento della prenotazione:', error);
