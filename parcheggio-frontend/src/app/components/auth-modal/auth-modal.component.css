@@ -1,7 +1,10 @@
 .auth-modal-container {
-  padding: 35px 30px;
-  width: 100%;
-  max-width: 600px;
+  min-width:60px;
+  max-width: 650px;
+  padding: 20px;
+  position: relative;
+  background: white;
+  border-radius: 10px;
   font-family: 'Montserrat', sans-serif;
   display: flex;
   flex-direction: column;
@@ -49,6 +52,12 @@
   width: 100%;
 }
 
+/* Rimuovi scrolling da Material Dialog */
+::ng-deep .mat-dialog-container {
+  overflow: hidden !important;
+  padding: 0 !important;
+}
+
 ::ng-deep .mat-mdc-tab .mdc-tab__text-label {
   font-family: 'Montserrat', sans-serif !important;
   font-size: 17px !important;
@@ -62,6 +71,11 @@
 
 ::ng-deep .mat-mdc-tab-body-content {
   padding: 20px 0;
+  overflow: hidden !important;
+}
+
+::ng-deep .mat-tab-body-wrapper {
+  overflow: hidden !important;
 }
 
 ::ng-deep .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {

@@ -1,7 +1,103 @@
-.forgot-password {
+
+.centered-form {
+  max-width: 400px;
+  width: 100%;  /* aggiunto per la responsività */
+  margin: 2rem auto;
+  padding: 2rem 1.5rem;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(33, 82, 243, 0.1);
+  position: relative;
+  transition: all 0.3s ease;
+  align-items: flex-start;  /* centra gli elementi */
+}
+
+.centered-form:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(33, 82, 243, 0.15);
+}
+
+/* Linea gradiente animata */
+.centered-form::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 3px;
+  background: linear-gradient(to right, #4CAF50, #2152f3);
+  transition: width 0.3s ease;
+}
+
+/* Attivazione della linea su hover e focus-within */
+.centered-form:hover::after,
+.centered-form:focus-within::after {
   width: 100%;
+}
+
+h2 {
+  color: #333;
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 1.8rem;
+  font-weight:700;
+}
+
+.form-field {
+  margin-bottom: 1.5rem;
+  width: 90%;  /* aggiunto per la responsività */
+  align-items: center;  /* centra gli elementi */
+  margin: 0 auto 1.5rem auto;
+}
+
+.form-field label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #333;
+  font-weight: 500;
+}
+
+.form-field input {
+  width: 100%;  /* ridotto da 100% a 90% */
+  padding: 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-field input:focus {
+  outline: none;
+  border-color: #2152f3;
+  box-shadow: 0 0 0 3px rgba(33, 82, 243, 0.1);
+}
+
+button[type="submit"] {
+  width: 100%;
+  padding: 12px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: block;
+}
+
+button[type="submit"]:hover {
+  background-color: #45a049;
+}
+
+button[type="submit"]:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.forgot-password {
   text-align: right;
-  margin: 5px 0 15px;
+  margin: 1rem 0;
 }
 
 .forgot-password a {
@@ -15,4 +111,138 @@
 .forgot-password a:hover {
   color: #4CAF50;
   text-decoration: underline;
+}
+
+
+p {
+  text-align: center;
+  margin-top: 1.5rem;
+  color: #666;
+}
+
+p a {
+  color: #2152f3;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+p a:hover {
+  color: #4CAF50;
+  text-decoration: underline;
+}
+
+.tab-switch-link {
+  cursor: pointer;
+}
+
+.forgot-password a, p a {
+  color: #2152f3;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  position: relative;
+  background: linear-gradient(to right, #4CAF50 50%, #2152f3 50%);
+  background-size: 200% 100%;
+  background-position: right bottom;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: all 0.3s ease-out;
+}
+
+.forgot-password a::after, p a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -2px;
+  left: 0;
+  background-color: #4CAF50;
+  transition: width 0.3s ease-out;
+}
+
+.forgot-password a:hover, p a:hover {
+  background-position: left bottom;
+  text-decoration: none;
+}
+
+.forgot-password a:hover::after, p a:hover::after {
+  width: 100%;
+}
+
+.follow-download {
+  background: #f2f2f2;
+  padding: 40px 20px;
+}
+.follow-download .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Titoli */
+.follow-download h3 {
+  font-size: 1rem;
+  color: #000000;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+
+/* Social icons */
+.social-icons a {
+  margin-right: 12px;
+  font-size: 1.2rem;
+  color: #555;
+  transition: color .3s;
+}
+.social-icons a:hover {
+  color: #39e000; /* es. verde ParkEase */
+}
+
+/* Badge app */
+.app-badges a {
+  display: inline-block;
+  margin-right: 12px;
+}
+.app-badges img {
+  height: 40px;
+  display: block;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .follow-download .container {
+    flex-direction: column;
+    text-align: center;
+  }
+  .social-icons {
+    margin-bottom: 20px;
+  }
+}
+
+.highlight {
+  background: linear-gradient(
+    to right,
+    #2152f3,
+    #4CAF50,
+    #2152f3,
+    #4CAF50
+  );
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shine 3s linear infinite;
+  text-shadow: none;
+}
+
+@keyframes shine {
+  to {
+    background-position: 200% center;
+  }
 }

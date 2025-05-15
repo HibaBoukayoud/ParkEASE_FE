@@ -75,7 +75,7 @@ export class AppComponent implements OnInit {    title = 'parcheggio-frontend';
         this.router.navigate(['/']);
     }    toggleAuthModal(): void {
         const dialogRef = this.dialog.open(AuthModalComponent, {
-            width: '480px',
+            width: '600px',
             maxWidth: '95vw',
             panelClass: 'auth-modal',
             disableClose: false,
